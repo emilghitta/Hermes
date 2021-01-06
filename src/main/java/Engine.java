@@ -7,17 +7,22 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
+import java.util.HashMap;
 
 public class Engine extends BuildGiver {
     public  String targetURL;
     public  String fileOutput;
+    private static String archivesLink = "https://archive.mozilla.org/pub/firefox/";
+    private static String archivesLinkDevEd = "https://archive.mozilla.org/pub/devedition/";
+    private HashMap<String, String> buildPath = new HashMap<String, String>();
+
 
 
     public void initiateDownload(String targetURL, String fileOutput) throws IOException {
         //We are using Java NIO package to handle networking input-output.
 
         // We are creating a stream to read content from the URL.
-        ReadableByteChannel readChannel = Channels.newChannel(new URL("https://archive.mozilla.org/pub/firefox/candidates/85.0b4-candidates/build1/win64/en-US/firefox-85.0b4.zip").openStream());
+        ReadableByteChannel readChannel = Channels.newChannel(new URL(targetURL).openStream());
 
         //We are transferring the downloaded content to a file on the local system.
         FileOutputStream fileOS = new FileOutputStream("D://te//firefox.zip");
@@ -81,10 +86,58 @@ public class Engine extends BuildGiver {
 
     //Think about different builds: ex: build 1, build 2 ,etc for a particular build version.
 
-    public void pathBuilder(String buildType, String buildNumber,String buildVersion,String archVersion, String fileExtension ){
+    public void pathFoundation(HashMap<String,String> builds, HashMap<String,Boolean> checkboxes) throws IOException {
+        String finalPath;
 
-        targetURL = "https://archive.mozilla.org/pub/firefox/";
+        if(!builds.get("betaInputField").isEmpty()){
+           buildPath.put("betaPath", archivesLink + "candidates/" + builds.get("betaInputField") + "-candidates/build1/win64/en-US/firefox-"+ builds.get("betaInputField") +".zip");
+            finalPath = buildPath.get("betaPath");
+            //Build 1 ? 2 ?
+            //win, mac or linux build?
+            //locale?
+            // File type ? .exe .msi ? .zip?
+            initiateDownload(finalPath,fileOutput);
+        }
+
+        if(!builds.get("releaseInputField").isEmpty()){
+            buildPath.put("releasePath", archivesLink + "candidates/" + builds.get("releaseInputField") + "-candidates/build1/win64/en-US/firefox-" + builds.get("releaseInputField") + ".zip");
+            finalPath = buildPath.get("releasePath");
+            //Build 1 ? 2 ?
+            //win, mac or linux build?
+            //locale?
+            // File type ? .exe .msi ? .zip?
+
+            initiateDownload(finalPath,fileOutput);
+
+        }
+
+        if(!builds.get("esrInputField").isEmpty()){
+            buildPath.put("esrPath", archivesLink + "candidates/" + builds.get("esrInputField") + "esr-candidates/build1/win64/en-US/firefox-" + builds.get("esrInputField") + "esr.zip");
+            finalPath = buildPath.get("esrPath");
+            //Build 1 ? 2 ?
+            //win, mac or linux build?
+            //locale?
+            // File type ? .exe .msi ? .zip?
+
+            initiateDownload(finalPath,fileOutput);
+        }
+
+        if(!builds.get("devedInputField").isEmpty()){
+            buildPath.put("devedPath", archivesLinkDevEd + "candidates/" + builds.get("devedInputField") + "-candidates/build1/win64/en-US/firefox-" + builds.get("devedInputField") + ".zip");
+            finalPath = buildPath.get("devedPath");
+            //Build 1 ? 2 ?
+            //win, mac or linux build?
+            //locale?
+            // File type ? .exe .msi ? .zip?
+
+            initiateDownload(finalPath,fileOutput);
+        }
+
+
+
     }
+
+
 
     public void quit(){
         System.exit(0);

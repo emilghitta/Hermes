@@ -3,6 +3,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class BuildGiver implements ActionListener, Runnable{
     private JButton downloadButton;
@@ -16,6 +18,12 @@ public class BuildGiver implements ActionListener, Runnable{
     private JTextField devedBuild;
     private JPanel apanel;
     static BuildGiver _this;
+
+    protected HashMap<String,String> builds = new HashMap<String, String>();
+    protected HashMap<String,Boolean> checkboxes = new HashMap<String, Boolean>();
+
+
+    //Maybe add those inside an HashMap?
 
     public BuildGiver (){
         _this = this;
@@ -68,7 +76,7 @@ public class BuildGiver implements ActionListener, Runnable{
         //Download Progress Bar
 
         apanel.add(new JLabel("Downloading Build Status:"));
-        progressBar1 = new JProgressBar(0,100);
+        //progressBar1 = new JProgressBar(0,100);
         apanel.add(progressBar1);
 
 
@@ -88,11 +96,7 @@ public class BuildGiver implements ActionListener, Runnable{
 
     @Override
     public void run() {
-        boolean nightlyBuild;
-        String betaInputField;
-        String releaseInputField;
-        String esrInputField;
-        String devedInputField;
+
 
         while(true){
             // wait for the signal from the GUI
@@ -101,21 +105,22 @@ public class BuildGiver implements ActionListener, Runnable{
             // simulate some long-running process like parsing a large file
                 try {
                     Engine eng = new Engine();
-                    betaInputField = betaBuild.getText();
 
-                    nightlyBuild = nightlyBuilds.isSelected();
+                    builds.put("betaInputField",betaBuild.getText());
+                    builds.put("releaseInputField",releaseBuild.getText());
+                    builds.put("esrInputField",esrBuild.getText());
+                    builds.put("devedInputField",devedBuild.getText());
 
-                    if(nightlyBuild){
-                        eng.pathBuilder();
-                    }
-                    nightlyBuild = nightlyBuilds.isSelected();
+                    checkboxes.put("nightlyBuildCheckbox",nightlyBuilds.isSelected());
+                    checkboxes.put("unarchiveBuildsCheckbox",unarchiveBuilds.isSelected());
+                    checkboxes.put("openBuildsCheckbox",openBuilds.isSelected());
+
+
+                    eng.pathFoundation(builds,checkboxes);
 
 
                     //eng.initiateDownload(eng.targetURL, eng.targetURL);
                     progressBar1.setValue(100);
-
-
-
 
                     eng.unzip();
                     eng.launchFirefox();

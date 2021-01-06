@@ -9,6 +9,8 @@ public class BuildGiver implements ActionListener, Runnable{
     private JProgressBar progressBar1;
     private JTextField betaBuild;
     private JCheckBox nightlyBuilds;
+    private JCheckBox unarchiveBuilds;
+    private JCheckBox openBuilds;
     private JTextField releaseBuild;
     private JTextField esrBuild;
     private JTextField devedBuild;
@@ -53,6 +55,15 @@ public class BuildGiver implements ActionListener, Runnable{
         devedBuild = new JTextField(10);
         apanel.add(devedBuild);
 
+        //Unarchive Builds?
+        apanel.add(new JLabel("Unarchive downloaded builds?"));
+        unarchiveBuilds = new JCheckBox();
+        apanel.add(unarchiveBuilds);
+
+        //Open Builds?
+        apanel.add(new JLabel("Open Downloaded Builds?"));
+        openBuilds = new JCheckBox();
+        apanel.add(openBuilds);
 
         //Download Progress Bar
 
@@ -90,7 +101,14 @@ public class BuildGiver implements ActionListener, Runnable{
             // simulate some long-running process like parsing a large file
                 try {
                     Engine eng = new Engine();
-                    String input = betaBuild.getText();
+                    betaInputField = betaBuild.getText();
+
+                    nightlyBuild = nightlyBuilds.isSelected();
+
+                    if(nightlyBuild){
+                        eng.pathBuilder();
+                    }
+                    nightlyBuild = nightlyBuilds.isSelected();
 
 
                     //eng.initiateDownload(eng.targetURL, eng.targetURL);

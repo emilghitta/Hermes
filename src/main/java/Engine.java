@@ -79,8 +79,11 @@ public class Engine extends BuildGiver {
 
     }
 
-    public void pathBuilder(){
+    //Think about different builds: ex: build 1, build 2 ,etc for a particular build version.
 
+    public void pathBuilder(String buildType, String buildNumber,String buildVersion,String archVersion, String fileExtension ){
+
+        targetURL = "https://archive.mozilla.org/pub/firefox/";
     }
 
     public void quit(){

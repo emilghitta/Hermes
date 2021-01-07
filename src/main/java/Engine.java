@@ -31,6 +31,7 @@ public class Engine extends BuildGiver {
         FileChannel writeChannel = fileOS.getChannel();
         writeChannel.transferFrom(readChannel,0,Long.MAX_VALUE);
 
+
     }
 
     public void buildCheck(String build) throws IOException {
@@ -78,7 +79,9 @@ public class Engine extends BuildGiver {
 
     //Add a UI check to verify if the user really wants this to happen.
     public void launchFirefox() throws IOException {
+        //Need to extract this from the file picker input
         String fxPath = "D://te//firefox//firefox.exe";
+
         Runtime run = Runtime.getRuntime();
         Process proc = run.exec(fxPath);
 
@@ -114,10 +117,7 @@ public class Engine extends BuildGiver {
         if(!builds.get("esrInputField").isEmpty()){
             buildPath.put("esrPath", archivesLink + "candidates/" + builds.get("esrInputField") + "esr-candidates/build1/win64/en-US/firefox-" + builds.get("esrInputField") + "esr.zip");
             finalPath = buildPath.get("esrPath");
-            //Build 1 ? 2 ?
-            //win, mac or linux build?
-            //locale?
-            // File type ? .exe .msi ? .zip?
+        
 
             initiateDownload(finalPath,fileOutput);
         }

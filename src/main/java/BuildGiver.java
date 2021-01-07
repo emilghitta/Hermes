@@ -118,12 +118,14 @@ public class BuildGiver implements ActionListener, Runnable{
 
                     eng.pathFoundation(builds,checkboxes);
 
-
-                    //eng.initiateDownload(eng.targetURL, eng.targetURL);
                     progressBar1.setValue(100);
 
                     eng.unzip();
-                    eng.launchFirefox();
+
+                    if(checkboxes.get("openBuildsCheckbox")){
+                        eng.launchFirefox();
+                    }
+
                     eng.quit();
                 } catch (IOException e) {
                     e.printStackTrace();

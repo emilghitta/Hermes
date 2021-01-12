@@ -22,13 +22,17 @@ public class Engine {
 
 
 
+    /*
+           We are using Java NIO package to handle networking input-output.
+     */
+
+    //We need to execute this part in a different Thread
     public void initiateDownload(String targetURL, String fileOutput, String fileOutputType) throws IOException {
-        //We are using Java NIO package to handle networking input-output.
 
         // We are creating a stream to read content from the URL.
         ReadableByteChannel readChannel = Channels.newChannel(new URL(targetURL).openStream());
 
-        //We are transferring the downloaded content to a file on the local system.
+        //We are transferring the downloaded content to a file on the local system based on the file type extension.
         FileOutputStream fileOS = new FileOutputStream("D://te//Firefox" + fileOutputType);
 
         //We are going to copy the contents read from the readChannel object to the file destination using writeChannel object.
@@ -90,42 +94,36 @@ public class Engine {
         Process proc = run.exec(fxPath);
 
     }
+    /*
+        Create the final resource path based on received arguments.
+     */
 
-    //Think about different builds: ex: build 1, build 2 ,etc for a particular build version.
-
-    public void pathFoundation(HashMap<String,String> builds, String osSelection, String fileType) throws IOException {
+    public void pathFoundation(HashMap<String,String> builds, String osSelection,String locale, String fileType) throws IOException {
         String finalPath;
 
         if(builds.get("betaVersion") != null){
-           buildPath.put("betaPath", archivesLink + "candidates/" + builds.get("betaVersion") + "-candidates/build1/" + osSelection +"/en-US/" + msiExeInstallerPathBuilder(builds.get("betaVersion"),fileType));
+           buildPath.put("betaPath", archivesLink + "candidates/" + builds.get("betaVersion") + "-candidates/build1/" + osSelection +"/" + locale + "/" + msiExeInstallerPathBuilder(builds.get("betaVersion"),fileType));
             finalPath = buildPath.get("betaPath");
             //Build 1 ? 2 ?
-            //win, mac or linux build?
-            //locale?
-            // File type ? .exe .msi ? .zip?
+
             initiateDownload(finalPath,fileOutput,fileOutputType);
         }else if(builds.get("releaseVersion") != null){
-            buildPath.put("releasePath", archivesLink + "candidates/" + builds.get("releaseVersion") + "-candidates/build1/" + osSelection +"/en-US/" + msiExeInstallerPathBuilder(builds.get("releaseVersion"),fileType));
+            buildPath.put("releasePath", archivesLink + "candidates/" + builds.get("releaseVersion") + "-candidates/build1/" + osSelection +"/" + locale + "/" + msiExeInstallerPathBuilder(builds.get("releaseVersion"),fileType));
             finalPath = buildPath.get("releasePath");
             //Build 1 ? 2 ?
-            //win, mac or linux build?
-            //locale?
-            // File type ? .exe .msi ? .zip?
+
 
             initiateDownload(finalPath,fileOutput,fileOutputType);
         }else if(builds.get("esrVersion") != null){
-            buildPath.put("esrPath", archivesLink + "candidates/" + builds.get("esrVersion") + "-candidates/build1/" + osSelection +"/en-US/" + msiExeInstallerPathBuilder(builds.get("esrVersion"),fileType));
+            buildPath.put("esrPath", archivesLink + "candidates/" + builds.get("esrVersion") + "-candidates/build1/" + osSelection +"/" + locale + "/" + msiExeInstallerPathBuilder(builds.get("esrVersion"),fileType));
             finalPath = buildPath.get("esrPath");
 
 
             initiateDownload(finalPath,fileOutput,fileOutputType);
         }else if(builds.get("devedVersion") != null){
-            buildPath.put("devedPath", archivesLinkDevEd + "candidates/" + builds.get("devedVersion") + "-candidates/build1/" + osSelection +"/en-US/" + msiExeInstallerPathBuilder(builds.get("devedVersion"),fileType));
+            buildPath.put("devedPath", archivesLinkDevEd + "candidates/" + builds.get("devedVersion") + "-candidates/build1/" + osSelection +"/" + locale + "/" + msiExeInstallerPathBuilder(builds.get("devedVersion"),fileType));
             finalPath = buildPath.get("devedPath");
             //Build 1 ? 2 ?
-            //win, mac or linux build?
-            //locale?
-            // File type ? .exe .msi ? .zip?
 
             initiateDownload(finalPath,fileOutput,fileOutputType);
         }else{
@@ -151,7 +149,7 @@ public class Engine {
             fileOutputType = ".exe";
             return "Firefox%20Installer.exe";
         }else{
-            fileOutputType = "zip";
+            fileOutputType = ".zip";
             return "firefox-" + builds + ".zip";
         }
     }

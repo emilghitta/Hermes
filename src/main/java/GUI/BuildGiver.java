@@ -9,7 +9,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Objects;
 
 public class BuildGiver extends JFrame{
     private JPanel mainPanel;
@@ -23,6 +22,10 @@ public class BuildGiver extends JFrame{
     private JLabel specifyBuildLabel;
     private JComboBox osVersion;
     private JTextField buildLocale;
+    private JCheckBox checkBox1;
+    private JCheckBox checkBox2;
+    private JCheckBox unarchiveBuild;
+    private JCheckBox autoOpen;
     private String dropdownInput;
     private String typeOfFile;
     private String osSelection;
@@ -42,12 +45,11 @@ public class BuildGiver extends JFrame{
 
         fileType.removeAllItems();
         fileType.addItem("zip");
-        fileType.addItem("exe");
         fileType.addItem("Firefox Setup exe");
         fileType.addItem("Firefox Setup msi");
 
          this.setLocationRelativeTo(null);
-         this.setSize(900,400);
+         this.setSize(1000,400);
          this.setResizable(false);
 
 
@@ -84,7 +86,7 @@ public class BuildGiver extends JFrame{
 
 
                 try {
-                    eng.pathFoundation(builds,osSelection,typeOfFile);
+                    eng.pathFoundation(builds,osSelection,buildLocale.getText(),typeOfFile);
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
@@ -122,13 +124,12 @@ public class BuildGiver extends JFrame{
                 }else if(osVersion.getSelectedItem() == "win64"){
                     fileType.removeAllItems();
                     fileType.addItem("zip");
-                    fileType.addItem("exe");
                     fileType.addItem("Firefox Setup exe");
                     fileType.addItem("Firefox Setup msi");
                 }else if(osVersion.getSelectedItem() == "win64-aarch64"){
                     fileType.removeAllItems();
                     fileType.addItem("zip");
-                    fileType.addItem("exe");
+                    fileType.addItem("Firefox Setup exe");
 
                 }else{
                     fileType.removeAllItems();

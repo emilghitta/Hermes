@@ -1,3 +1,5 @@
+package AppEngine;
+
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 
@@ -9,23 +11,25 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.util.HashMap;
 
-public class Engine extends BuildGiver {
+
+public class Engine {
     public  String targetURL;
     public  String fileOutput;
     private static String archivesLink = "https://archive.mozilla.org/pub/firefox/";
     private static String archivesLinkDevEd = "https://archive.mozilla.org/pub/devedition/";
     private HashMap<String, String> buildPath = new HashMap<String, String>();
+    private String fileOutputType;
 
 
 
-    public void initiateDownload(String targetURL, String fileOutput) throws IOException {
+    public void initiateDownload(String targetURL, String fileOutput, String fileOutputType) throws IOException {
         //We are using Java NIO package to handle networking input-output.
 
         // We are creating a stream to read content from the URL.
         ReadableByteChannel readChannel = Channels.newChannel(new URL(targetURL).openStream());
 
         //We are transferring the downloaded content to a file on the local system.
-        FileOutputStream fileOS = new FileOutputStream("D://te//firefox.zip");
+        FileOutputStream fileOS = new FileOutputStream("D://te//Firefox" + fileOutputType);
 
         //We are going to copy the contents read from the readChannel object to the file destination using writeChannel object.
         FileChannel writeChannel = fileOS.getChannel();
@@ -57,7 +61,7 @@ public class Engine extends BuildGiver {
     }
 
     public void pathCheck(String targetURL) throws IOException {
-        initiateDownload(targetURL,fileOutput);
+        initiateDownload(targetURL,fileOutput,fileOutputType);
     }
 
     /*
@@ -89,52 +93,67 @@ public class Engine extends BuildGiver {
 
     //Think about different builds: ex: build 1, build 2 ,etc for a particular build version.
 
-    public void pathFoundation(HashMap<String,String> builds, HashMap<String,Boolean> checkboxes) throws IOException {
+    public void pathFoundation(HashMap<String,String> builds, String osSelection, String fileType) throws IOException {
         String finalPath;
 
-        if(!builds.get("betaInputField").isEmpty()){
-           buildPath.put("betaPath", archivesLink + "candidates/" + builds.get("betaInputField") + "-candidates/build1/win64/en-US/firefox-"+ builds.get("betaInputField") +".zip");
+        if(builds.get("betaVersion") != null){
+           buildPath.put("betaPath", archivesLink + "candidates/" + builds.get("betaVersion") + "-candidates/build1/" + osSelection +"/en-US/" + msiExeInstallerPathBuilder(builds.get("betaVersion"),fileType));
             finalPath = buildPath.get("betaPath");
             //Build 1 ? 2 ?
             //win, mac or linux build?
             //locale?
             // File type ? .exe .msi ? .zip?
-            initiateDownload(finalPath,fileOutput);
-        }
-
-        if(!builds.get("releaseInputField").isEmpty()){
-            buildPath.put("releasePath", archivesLink + "candidates/" + builds.get("releaseInputField") + "-candidates/build1/win64/en-US/firefox-" + builds.get("releaseInputField") + ".zip");
+            initiateDownload(finalPath,fileOutput,fileOutputType);
+        }else if(builds.get("releaseVersion") != null){
+            buildPath.put("releasePath", archivesLink + "candidates/" + builds.get("releaseVersion") + "-candidates/build1/" + osSelection +"/en-US/" + msiExeInstallerPathBuilder(builds.get("releaseVersion"),fileType));
             finalPath = buildPath.get("releasePath");
             //Build 1 ? 2 ?
             //win, mac or linux build?
             //locale?
             // File type ? .exe .msi ? .zip?
 
-            initiateDownload(finalPath,fileOutput);
-
-        }
-
-        if(!builds.get("esrInputField").isEmpty()){
-            buildPath.put("esrPath", archivesLink + "candidates/" + builds.get("esrInputField") + "esr-candidates/build1/win64/en-US/firefox-" + builds.get("esrInputField") + "esr.zip");
+            initiateDownload(finalPath,fileOutput,fileOutputType);
+        }else if(builds.get("esrVersion") != null){
+            buildPath.put("esrPath", archivesLink + "candidates/" + builds.get("esrVersion") + "-candidates/build1/" + osSelection +"/en-US/" + msiExeInstallerPathBuilder(builds.get("esrVersion"),fileType));
             finalPath = buildPath.get("esrPath");
-        
 
-            initiateDownload(finalPath,fileOutput);
-        }
 
-        if(!builds.get("devedInputField").isEmpty()){
-            buildPath.put("devedPath", archivesLinkDevEd + "candidates/" + builds.get("devedInputField") + "-candidates/build1/win64/en-US/firefox-" + builds.get("devedInputField") + ".zip");
+            initiateDownload(finalPath,fileOutput,fileOutputType);
+        }else if(builds.get("devedVersion") != null){
+            buildPath.put("devedPath", archivesLinkDevEd + "candidates/" + builds.get("devedVersion") + "-candidates/build1/" + osSelection +"/en-US/" + msiExeInstallerPathBuilder(builds.get("devedVersion"),fileType));
             finalPath = buildPath.get("devedPath");
             //Build 1 ? 2 ?
             //win, mac or linux build?
             //locale?
             // File type ? .exe .msi ? .zip?
 
-            initiateDownload(finalPath,fileOutput);
+            initiateDownload(finalPath,fileOutput,fileOutputType);
+        }else{
+            //Rethink this! Hardcoded for now
+            buildPath.put("latestNightlyPath",archivesLink + builds.get("latestNightly") +"firefox-86.0a1.en-US.win64.zip");
+            finalPath = buildPath.get("latestNightlyPath");
+            initiateDownload(finalPath,fileOutput,fileOutputType);
+
+            //initiate download in a separate thread? We need to populate the downloaded file with bits
         }
 
 
+    }
 
+    private String msiExeInstallerPathBuilder(String builds,String fileType){
+        if(fileType.contains("Firefox Setup exe")){
+            fileOutputType = ".exe";
+            return "Firefox%20Setup%20" + builds + ".exe";
+        }else if(fileType.contains("Firefox Setup msi")){
+            fileOutputType = ".msi";
+            return "Firefox%20Setup%20" + builds + ".msi";
+        }else if(fileType.contains("Firefox Installer.exe")){
+            fileOutputType = ".exe";
+            return "Firefox%20Installer.exe";
+        }else{
+            fileOutputType = "zip";
+            return "firefox-" + builds + ".zip";
+        }
     }
 
 

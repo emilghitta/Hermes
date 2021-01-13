@@ -80,8 +80,15 @@ public class Engine {
             System.out.println(fxPath);
         }
         System.out.println(fxPath);
-        Runtime run = Runtime.getRuntime();
-        Process proc = run.exec(fxPath);
+
+        if(fileOutputType.contains(".msi")){
+            Runtime run = Runtime.getRuntime();
+            Process proc = run.exec("msiexec /i " +fxPath);
+        }else{
+            Runtime run = Runtime.getRuntime();
+            Process proc = run.exec(fxPath);
+
+        }
 
     }
     /*

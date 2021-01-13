@@ -2,15 +2,16 @@ package GUI;
 
 import AppEngine.Engine;
 import javax.swing.*;
-import javax.swing.plaf.FileChooserUI;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
 
-public class BuildGiver extends JFrame{
+public class Hermes extends JFrame{
     private JPanel mainPanel;
     private JComboBox fileType;
     private JTextField textField2;
@@ -35,8 +36,11 @@ public class BuildGiver extends JFrame{
 
     protected HashMap<String,String> builds = new HashMap<>();
 
-    public BuildGiver(String title){
+    public Hermes(String title){
         super(title);
+        Image iconURL = Toolkit.getDefaultToolkit().getImage("src/main/resources/Hermes.png");
+        ImageIcon icon = new ImageIcon(iconURL);
+        this.setIconImage(icon.getImage());
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setContentPane(mainPanel);
 
@@ -153,7 +157,7 @@ public class BuildGiver extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser c = new JFileChooser();
-                int rVal = c.showSaveDialog(BuildGiver.this);
+                int rVal = c.showSaveDialog(Hermes.this);
                 if(rVal == JFileChooser.APPROVE_OPTION){
                     filename.setText(c.getSelectedFile().getName().trim());
                     dir.setText(c.getCurrentDirectory().toString());
@@ -174,7 +178,7 @@ public class BuildGiver extends JFrame{
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                JFrame frame = new BuildGiver("Build Giver");
+                JFrame frame = new Hermes("Hermes");
                 frame.setVisible(true);
             }
         });

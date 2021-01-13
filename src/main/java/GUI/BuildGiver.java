@@ -1,8 +1,8 @@
 package GUI;
 
 import AppEngine.Engine;
-
 import javax.swing.*;
+import javax.swing.plaf.FileChooserUI;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -22,13 +22,16 @@ public class BuildGiver extends JFrame{
     private JLabel specifyBuildLabel;
     private JComboBox osVersion;
     private JTextField buildLocale;
-    private JCheckBox checkBox1;
-    private JCheckBox checkBox2;
+    private JCheckBox unarchiveBuilds;
+    private JCheckBox autoOpenBuilds;
+    private JButton saveToButton;
     private JCheckBox unarchiveBuild;
     private JCheckBox autoOpen;
     private String dropdownInput;
     private String typeOfFile;
     private String osSelection;
+    private JTextField filename = new JTextField(), dir = new JTextField();
+    public String fileNN, dirNN;
 
     protected HashMap<String,String> builds = new HashMap<>();
 
@@ -37,11 +40,15 @@ public class BuildGiver extends JFrame{
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setContentPane(mainPanel);
 
-
          specifyBuildLabel.setVisible(false);
          buildVersion.setVisible(false);
          jsonText.setLineWrap(true);
          userJSText.setLineWrap(true);
+
+         //Enable this when we implement it successfully
+        jsonText.setEnabled(false);
+        userJSText.setEnabled(false);
+        downloadButton.setEnabled(false);
 
         fileType.removeAllItems();
         fileType.addItem("zip");
@@ -51,7 +58,6 @@ public class BuildGiver extends JFrame{
          this.setLocationRelativeTo(null);
          this.setSize(1000,400);
          this.setResizable(false);
-
 
         downloadButton.addActionListener(new ActionListener() {
             @Override
@@ -84,17 +90,20 @@ public class BuildGiver extends JFrame{
                    osSelection = (String) osVersion.getSelectedItem();
                    typeOfFile = (String) fileType.getSelectedItem();
 
+                   eng.checkboxes.put("unarchiveBuilds", unarchiveBuilds.isSelected());
+                   eng.checkboxes.put("autoOpenBuilds",autoOpenBuilds.isSelected());
+
+                System.out.println(fileNN);
+                System.out.println(dirNN);
+
 
                 try {
-                    eng.pathFoundation(builds,osSelection,buildLocale.getText(),typeOfFile);
+                    eng.pathFoundation(builds,osSelection,buildLocale.getText(),typeOfFile,fileNN,dirNN);
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
-
-
             }
         });
-
 
         buildDropdown.addItemListener(new ItemListener() {
             @Override
@@ -109,10 +118,10 @@ public class BuildGiver extends JFrame{
                 }
             }
         });
+
         osVersion.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-
 
                 if(osVersion.getSelectedItem() == "linux-i686" || osVersion.getSelectedItem() == "linux-x86_64"){
                     fileType.removeAllItems();
@@ -140,8 +149,26 @@ public class BuildGiver extends JFrame{
                 }
             }
         });
-    }
+        saveToButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser c = new JFileChooser();
+                int rVal = c.showSaveDialog(BuildGiver.this);
+                if(rVal == JFileChooser.APPROVE_OPTION){
+                    filename.setText(c.getSelectedFile().getName().trim());
+                    dir.setText(c.getCurrentDirectory().toString());
+                    fileNN = filename.getText();
+                    dirNN = dir.getText();
+                    downloadButton.setEnabled(true);
+                }
+                if(rVal == JFileChooser.CANCEL_OPTION){
+                    filename.setText("");
+                    dir.setText("");
+                }
 
+            }
+        });
+    }
 
     public static void main(String[] args){
         SwingUtilities.invokeLater(new Runnable() {
@@ -151,8 +178,5 @@ public class BuildGiver extends JFrame{
                 frame.setVisible(true);
             }
         });
-
-
     }
-
 }

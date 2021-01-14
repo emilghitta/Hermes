@@ -2,6 +2,12 @@ package AppEngine;
 
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import javax.swing.text.html.parser.Parser;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -15,6 +21,8 @@ public class Engine {
     public  String fileOutput;
     private static String archivesLink = "https://archive.mozilla.org/pub/firefox/";
     private static String archivesLinkDevEd = "https://archive.mozilla.org/pub/devedition/";
+    private String latestNightlyPath = "https://archive.mozilla.org/pub/firefox/nightly/latest-mozilla-central/";
+    private String latestNightlyLocalePath ="https://archive.mozilla.org/pub/firefox/nightly/latest-mozilla-central-l10n/";
     private HashMap<String, String> buildPath = new HashMap<String, String>();
     private String fileOutputType;
     public HashMap<String, Boolean> checkboxes = new HashMap<>();
@@ -124,10 +132,14 @@ public class Engine {
 
             initiateDownload(finalPath,fileOutput,fileOutputType,fileName,directory);
         }else{
-            //Rethink this! Hardcoded for now
-            buildPath.put("latestNightlyPath",archivesLink + builds.get("latestNightly") +"firefox-86.0a1.en-US.win64.zip");
+            if(locale.contains("en-US")){
+                buildPath.put("latestNightlyPath", latestNightlyPath +"firefox-" + parseHtml(latestNightlyPath) + "." + locale + "." + osSelection +  msiExeInstallerPathBuilder(builds.get("latestNightly"),fileType));
+            }else{
+                buildPath.put("latestNightlyPath",latestNightlyLocalePath + "firefox-" + parseHtml(latestNightlyPath) + "." + locale + "." + osSelection + msiExeInstallerPathBuilder(builds.get("latestNightly"),fileType));
+            }
             finalPath = buildPath.get("latestNightlyPath");
             initiateDownload(finalPath,fileOutput,fileOutputType,fileName,directory);
+
 
         }
 
@@ -135,17 +147,46 @@ public class Engine {
 
     private String msiExeInstallerPathBuilder(String builds,String fileType){
         if(fileType.contains("Firefox Setup exe")){
-            fileOutputType = ".exe";
-            return "Firefox%20Setup%20" + builds + ".exe";
+            if(builds.contains("Nightly")){
+                return fileOutputType = ".installer.exe";
+            }else{
+                fileOutputType = ".exe";
+                return "Firefox%20Setup%20" + builds + ".exe";
+            }
+
         }else if(fileType.contains("Firefox Setup msi")){
-            fileOutputType = ".msi";
-            return "Firefox%20Setup%20" + builds + ".msi";
+            if(builds.contains("Nightly")){
+                return fileOutputType = ".installer.msi";
+            }else{
+                fileOutputType = ".msi";
+                return "Firefox%20Setup%20" + builds + ".msi";
+            }
+
         }else if(fileType.contains("Firefox Installer.exe")){
-            fileOutputType = ".exe";
-            return "Firefox%20Installer.exe";
+            if(builds.contains("Nightly")){
+                return fileOutputType = ".installer.exe";
+            }else{
+                fileOutputType = ".exe";
+                return "Firefox%20Installer.exe";
+            }
+
         }else{
-            fileOutputType = ".zip";
-            return "firefox-" + builds + ".zip";
+            if(builds.contains("Nightly")){
+                return fileOutputType = ".zip";
+            }else{
+                fileOutputType = ".zip";
+                return "firefox-" + builds + ".zip";
+            }
+
         }
+    }
+
+    public String parseHtml(String build) throws IOException {
+        Document doc = Jsoup.connect(build).get();
+        Elements content = doc.select("td").eq(617);
+
+        String nightlyCurrentVersion = content.text().replaceFirst("firefox-","");
+        return nightlyCurrentVersion = nightlyCurrentVersion.replaceFirst(".en-US.win64.zip","");
+
     }
 }

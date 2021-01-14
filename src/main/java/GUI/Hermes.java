@@ -8,7 +8,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.IOException;
-import java.net.URL;
 import java.util.HashMap;
 
 public class Hermes extends JFrame{
@@ -26,6 +25,7 @@ public class Hermes extends JFrame{
     private JCheckBox unarchiveBuilds;
     private JCheckBox autoOpenBuilds;
     private JButton saveToButton;
+    private JLabel downloadPathLabel;
     private JCheckBox unarchiveBuild;
     private JCheckBox autoOpen;
     private String dropdownInput;
@@ -52,26 +52,31 @@ public class Hermes extends JFrame{
          //Enable this when we implement it successfully
         jsonText.setEnabled(false);
         userJSText.setEnabled(false);
+
         downloadButton.setEnabled(false);
+        downloadPathLabel.setVisible(false);
 
         fileType.removeAllItems();
         fileType.addItem("zip");
         fileType.addItem("Firefox Setup exe");
         fileType.addItem("Firefox Setup msi");
 
-         this.setLocationRelativeTo(null);
-         this.setSize(1000,400);
-         this.setResizable(false);
+
+        this.setSize(1100,400);
+        this.setLocationRelativeTo(null);
+        this.setResizable(false);
 
         downloadButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                    Engine eng = new Engine();
                    dropdownInput = (String) buildDropdown.getSelectedItem();
+                   setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
 
                    switch (dropdownInput){
                        case "Latest Nightly":
-                           builds.put("latestNightly", "nightly/latest-mozilla-central/");
+                           builds.put("latestNightly", "Nightly");
                            break;
 
                        case "Beta":
@@ -106,6 +111,7 @@ public class Hermes extends JFrame{
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
+                setCursor(Cursor.getDefaultCursor());
             }
         });
 
@@ -163,6 +169,8 @@ public class Hermes extends JFrame{
                     dir.setText(c.getCurrentDirectory().toString());
                     fileNN = filename.getText();
                     dirNN = dir.getText();
+                    downloadPathLabel.setText(dirNN + "\\" +fileNN);
+                    downloadPathLabel.setVisible(true);
                     downloadButton.setEnabled(true);
                 }
                 if(rVal == JFileChooser.CANCEL_OPTION){
@@ -172,9 +180,21 @@ public class Hermes extends JFrame{
 
             }
         });
+
+        fileType.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if(fileType.getSelectedItem() == "zip" || fileType.getSelectedItem() == "tar.bz2"){
+                    unarchiveBuilds.setEnabled(true);
+                }else{
+                    unarchiveBuilds.setSelected(false);
+                    unarchiveBuilds.setEnabled(false);
+                }
+            }
+        });
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -182,5 +202,6 @@ public class Hermes extends JFrame{
                 frame.setVisible(true);
             }
         });
+
     }
 }

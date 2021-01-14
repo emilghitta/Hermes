@@ -13,7 +13,7 @@ import java.util.HashMap;
 public class Hermes extends JFrame{
     private JPanel mainPanel;
     private JComboBox fileType;
-    private JTextField textField2;
+    private JTextField buildNumber;
     private JComboBox buildDropdown;
     private JTextField buildVersion;
     private JButton downloadButton;
@@ -26,6 +26,7 @@ public class Hermes extends JFrame{
     private JCheckBox autoOpenBuilds;
     private JButton saveToButton;
     private JLabel downloadPathLabel;
+    private JLabel errorMessage;
     private JCheckBox unarchiveBuild;
     private JCheckBox autoOpen;
     private String dropdownInput;
@@ -53,8 +54,13 @@ public class Hermes extends JFrame{
         jsonText.setEnabled(false);
         userJSText.setEnabled(false);
 
+        //Remove this when implemented
+        buildNumber.setEnabled(false);
+        buildNumber.setText("Not yet implemented");
+
         downloadButton.setEnabled(false);
         downloadPathLabel.setVisible(false);
+        errorMessage.setVisible(false);
 
         fileType.removeAllItems();
         fileType.addItem("zip");
@@ -63,12 +69,14 @@ public class Hermes extends JFrame{
 
 
         this.setSize(1100,400);
+        //this.pack();
         this.setLocationRelativeTo(null);
         this.setResizable(false);
 
         downloadButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                errorMessage.setVisible(false);
                    Engine eng = new Engine();
                    dropdownInput = (String) buildDropdown.getSelectedItem();
                    setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -108,8 +116,14 @@ public class Hermes extends JFrame{
 
                 try {
                     eng.pathFoundation(builds,osSelection,buildLocale.getText(),typeOfFile,fileNN,dirNN);
+                    errorMessage.setText("SUCCESS!!");
+                    errorMessage.setForeground(Color.green);
+                    errorMessage.setVisible(true);
                 } catch (IOException ioException) {
-                    ioException.printStackTrace();
+                    errorMessage.setText("Build Download Error: Please double check you Build Version or Locale");
+                    errorMessage.setForeground(Color.red);
+                    errorMessage.setVisible(true);
+
                 }
                 setCursor(Cursor.getDefaultCursor());
             }

@@ -68,10 +68,10 @@ public class Hermes extends JFrame{
         fileType.addItem("Firefox Setup msi");
 
 
-        this.setSize(1100,400);
-        //this.pack();
+
+        this.pack();
         this.setLocationRelativeTo(null);
-        this.setResizable(false);
+        this.setResizable(true);
 
         downloadButton.addActionListener(new ActionListener() {
             @Override
@@ -113,13 +113,13 @@ public class Hermes extends JFrame{
                 System.out.println(fileNN);
                 System.out.println(dirNN);
 
-
                 try {
                     eng.pathFoundation(builds,osSelection,buildLocale.getText(),typeOfFile,fileNN,dirNN);
                     errorMessage.setText("SUCCESS!!");
                     errorMessage.setForeground(Color.green);
                     errorMessage.setVisible(true);
                 } catch (IOException ioException) {
+                    System.out.println(ioException);
                     errorMessage.setText("Build Download Error: Please double check you Build Version or Locale");
                     errorMessage.setForeground(Color.red);
                     errorMessage.setVisible(true);

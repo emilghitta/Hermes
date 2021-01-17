@@ -8,6 +8,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import javax.swing.text.html.parser.Parser;
+import java.awt.*;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -33,16 +35,17 @@ public class Engine {
 
     //We need to execute this part in a different Thread
     public void initiateDownload(String targetURL, String fileOutput, String fileOutputType, String filename, String directory) throws IOException {
-
+        System.out.println(osCheck());
         // We are creating a stream to read content from the URL.
         ReadableByteChannel readChannel = Channels.newChannel(new URL(targetURL).openStream());
 
         //We are transferring the downloaded content to a file on the local system based on the file type extension.
-        FileOutputStream fileOS = new FileOutputStream(directory + "\\" + filename + fileOutputType);
+        FileOutputStream fileOS = new FileOutputStream(directory + osCheck() + filename + fileOutputType);
 
         //We are going to copy the contents read from the readChannel object to the file destination using writeChannel object.
         FileChannel writeChannel = fileOS.getChannel();
         writeChannel.transferFrom(readChannel, 0, Long.MAX_VALUE);
+
 
         //We need to close the FileChannel
         writeChannel.close();
@@ -84,18 +87,25 @@ public class Engine {
         if(checkboxes.get("unarchiveBuilds")){
             fxPath = directory+ "\\firefox\\firefox" + fileOutputType;
         }else if(!checkboxes.get("unarchiveBuilds")){
-            fxPath = directory + "\\"+ fileName +fileOutputType;
+            fxPath = directory + osCheck() + fileName +fileOutputType;
             System.out.println(fxPath);
         }
         System.out.println(fxPath);
 
+        //Need to test this in windows before removing! But since we are using desktop we could remove run.exec from msi
         if(fileOutputType.contains(".msi")){
             Runtime run = Runtime.getRuntime();
             Process proc = run.exec("msiexec /i " +fxPath);
         }else{
-            Runtime run = Runtime.getRuntime();
-            Process proc = run.exec(fxPath);
-
+            try{
+                Desktop desktop = null;
+                if(Desktop.isDesktopSupported()){
+                    desktop = Desktop.getDesktop();
+                }
+                desktop.open(new File(fxPath));
+            }catch (IOException ioe){
+                ioe.printStackTrace();
+            }
         }
 
     }
@@ -145,6 +155,7 @@ public class Engine {
 
     }
 
+    //Need to rethink this, make it much simple based on received params and evaluate them accordingly
     private String msiExeInstallerPathBuilder(String builds,String fileType){
         if(fileType.contains("Firefox Setup exe")){
             if(builds.contains("Nightly")){
@@ -171,15 +182,17 @@ public class Engine {
             }
 
         }else{
-            if(builds.contains("Nightly")){
-                return fileOutputType = ".zip";
-            }else{
-                fileOutputType = ".zip";
-                return "firefox-" + builds + ".zip";
+            if(builds.contains("Nightly")) {
+                if(fileType.contains("dmg")) {
+                    return fileOutputType = ".dmg";
+                }else if(fileType.contains("pkg")) {
+                    return fileOutputType = ".pkg";
+                }
             }
-
+                    fileOutputType = ".zip";
+                    return "firefox-" + builds + ".zip";
+            }
         }
-    }
 
     public String parseHtml(String build) throws IOException {
         Document doc = Jsoup.connect(build).get();
@@ -188,5 +201,13 @@ public class Engine {
         String nightlyCurrentVersion = content.text().replaceFirst("firefox-","");
         return nightlyCurrentVersion = nightlyCurrentVersion.replaceFirst(".en-US.win64.zip","");
 
+    }
+
+    public String osCheck(){
+        String OS = System.getProperty("os.name");
+        if(OS.contains("Mac OS X")){
+            return "/";
+        }
+        return "\\";
     }
 }

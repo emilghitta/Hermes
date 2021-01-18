@@ -195,15 +195,6 @@
                           <text value="Build Number:"/>
                         </properties>
                       </component>
-                      <component id="628df" class="javax.swing.JTextField" binding="buildNumber">
-                        <constraints>
-                          <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                            <preferred-size width="40" height="-1"/>
-                            <maximum-size width="185" height="-1"/>
-                          </grid>
-                        </constraints>
-                        <properties/>
-                      </component>
                       <component id="cc5b9" class="javax.swing.JTextField" binding="buildVersion">
                         <constraints>
                           <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
@@ -214,6 +205,14 @@
                         <properties>
                           <name value=""/>
                         </properties>
+                      </component>
+                      <component id="254a6" class="javax.swing.JComboBox" binding="buildNumberDrop">
+                        <constraints>
+                          <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                            <maximum-size width="185" height="-1"/>
+                          </grid>
+                        </constraints>
+                        <properties/>
                       </component>
                     </children>
                   </grid>

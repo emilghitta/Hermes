@@ -2,16 +2,15 @@ package GUI;
 
 import AppEngine.Engine;
 import javax.swing.*;
-import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class Hermes extends JFrame{
     private JPanel mainPanel;
     private JComboBox fileType;
-    private JTextField buildNumber;
     private JComboBox buildDropdown;
     private JTextField buildVersion;
     private JButton downloadButton;
@@ -26,6 +25,7 @@ public class Hermes extends JFrame{
     private JButton downloadMultipleBuildsViaButton;
     private JTextArea batchDownload;
     private JScrollPane scrollbar;
+    private JComboBox buildNumberDrop;
     private JCheckBox unarchiveBuild;
     private JCheckBox autoOpen;
     private String dropdownInput;
@@ -48,13 +48,12 @@ public class Hermes extends JFrame{
 
         scrollbar.getVerticalScrollBar().setUnitIncrement(16);
 
-         specifyBuildLabel.setVisible(false);
-         buildVersion.setVisible(false);
+        specifyBuildLabel.setVisible(false);
+        buildVersion.setVisible(false);
 
-        //Remove this when implemented
-        buildNumber.setEnabled(false);
-        buildNumber.setText("Not yet implemented");
+        buildNumberDrop.addItem("build1");
         buildVersion.setText("eg. 82.0b4");
+        buildLocale.setText("eg. en-US");
 
         batchDownload.setLineWrap(true);
 
@@ -217,6 +216,40 @@ public class Hermes extends JFrame{
 
             }
         });
+        buildLocale.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                super.focusGained(e);
+                if(buildLocale.getText().contains("eg. en-US")){
+                    buildLocale.setText("");
+                }
+            }
+        });
+
+        buildNumberDrop.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                super.focusGained(e);
+                Engine en = new Engine();
+
+                try {
+                    en.parseHtmlBuildVersion(buildPathForBuildVersion(Objects.requireNonNull(buildDropdown.getSelectedItem()).toString()));
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private String buildPathForBuildVersion(String build){
+        if(!build.contains("DevEd") || !build.contains("Latest Nightly")){
+            return "https://archive.mozilla.org/pub/firefox/candidates/" + buildVersion.getText() + "-candidates/";
+        }else if(build.contains("DevEd")){
+            return "https://archive.mozilla.org/pub/devedition/candidates/" + buildVersion.getText() + "-candidates/";
+        }else{
+            return "";
+        }
+
     }
 
     public static void main(String[] args) throws IOException {

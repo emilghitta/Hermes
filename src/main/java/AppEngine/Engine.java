@@ -16,7 +16,10 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Engine {
     public  String targetURL;
@@ -213,6 +216,22 @@ public class Engine {
         return nightlyCurrentVersion = nightlyCurrentVersion.replaceFirst(".en-US.win64.zip","");
 
     }
+
+    public String parseHtmlBuildVersion(String build) throws IOException {
+        Document buildNumber = Jsoup.connect(build).get();
+        Elements con = buildNumber.select("a");
+
+        String builds = con.text();
+        String item[] = builds.replace("..", "").split("/ ");
+
+        System.out.println(item[1]);
+
+
+        System.out.println(builds);
+        return con.text();
+    }
+
+
 
     public String osCheck(){
         String OS = System.getProperty("os.name");

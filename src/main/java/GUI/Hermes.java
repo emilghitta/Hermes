@@ -2,11 +2,9 @@ package GUI;
 
 import AppEngine.Engine;
 import javax.swing.*;
+import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.event.*;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -17,8 +15,6 @@ public class Hermes extends JFrame{
     private JComboBox buildDropdown;
     private JTextField buildVersion;
     private JButton downloadButton;
-    private JTextArea jsonText;
-    private JTextArea userJSText;
     private JLabel specifyBuildLabel;
     private JComboBox osVersion;
     private JTextField buildLocale;
@@ -27,6 +23,9 @@ public class Hermes extends JFrame{
     private JButton saveToButton;
     private JLabel downloadPathLabel;
     private JLabel errorMessage;
+    private JButton downloadMultipleBuildsViaButton;
+    private JTextArea batchDownload;
+    private JScrollPane scrollbar;
     private JCheckBox unarchiveBuild;
     private JCheckBox autoOpen;
     private String dropdownInput;
@@ -34,6 +33,7 @@ public class Hermes extends JFrame{
     private String osSelection;
     private JTextField filename = new JTextField(), dir = new JTextField();
     public String fileNN, dirNN;
+
 
     protected HashMap<String,String> builds = new HashMap<>();
 
@@ -45,28 +45,28 @@ public class Hermes extends JFrame{
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setContentPane(mainPanel);
 
+
+        scrollbar.getVerticalScrollBar().setUnitIncrement(16);
+
          specifyBuildLabel.setVisible(false);
          buildVersion.setVisible(false);
-         jsonText.setLineWrap(true);
-         userJSText.setLineWrap(true);
-
-         //Enable this when we implement it successfully
-        jsonText.setEnabled(false);
-        userJSText.setEnabled(false);
 
         //Remove this when implemented
         buildNumber.setEnabled(false);
         buildNumber.setText("Not yet implemented");
+        buildVersion.setText("eg. 82.0b4");
+
+        batchDownload.setLineWrap(true);
+
 
         downloadButton.setEnabled(false);
         downloadPathLabel.setVisible(false);
         errorMessage.setVisible(false);
 
         fileType.removeAllItems();
-        fileType.addItem("zip");
+        fileType.addItem("archive");
         fileType.addItem("Firefox Setup exe");
         fileType.addItem("Firefox Setup msi");
-
 
 
         this.pack();
@@ -124,6 +124,7 @@ public class Hermes extends JFrame{
                     errorMessage.setForeground(Color.red);
                     errorMessage.setVisible(true);
 
+
                 }
                 setCursor(Cursor.getDefaultCursor());
             }
@@ -156,17 +157,17 @@ public class Hermes extends JFrame{
                     fileType.addItem("pkg");
                 }else if(osVersion.getSelectedItem() == "win64"){
                     fileType.removeAllItems();
-                    fileType.addItem("zip");
+                    fileType.addItem("archive");
                     fileType.addItem("Firefox Setup exe");
                     fileType.addItem("Firefox Setup msi");
                 }else if(osVersion.getSelectedItem() == "win64-aarch64"){
                     fileType.removeAllItems();
-                    fileType.addItem("zip");
+                    fileType.addItem("archive");
                     fileType.addItem("Firefox Setup exe");
 
                 }else{
                     fileType.removeAllItems();
-                    fileType.addItem("zip");
+                    fileType.addItem("archive");
                     fileType.addItem("Firefox Installer.exe");
                     fileType.addItem("Firefox Setup exe");
                     fileType.addItem("Firefox Setup msi");
@@ -198,12 +199,22 @@ public class Hermes extends JFrame{
         fileType.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                if(fileType.getSelectedItem() == "zip" || fileType.getSelectedItem() == "tar.bz2"){
+                if(fileType.getSelectedItem() == "archive" || fileType.getSelectedItem() == "tar.bz2"){
                     unarchiveBuilds.setEnabled(true);
                 }else{
                     unarchiveBuilds.setSelected(false);
                     unarchiveBuilds.setEnabled(false);
                 }
+            }
+        });
+        buildVersion.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                super.focusGained(e);
+                if(buildVersion.getText().contains("eg. 82.0b4")){
+                    buildVersion.setText("");
+                }
+
             }
         });
     }

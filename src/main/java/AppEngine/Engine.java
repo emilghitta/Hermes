@@ -187,10 +187,21 @@ public class Engine {
                     return fileOutputType = ".dmg";
                 }else if(fileType.contains("pkg")) {
                     return fileOutputType = ".pkg";
+                }else{
+                    return fileOutputType = ".zip";
                 }
-            }
+            }else {
+                if (fileType.contains("dmg")) {
+                    fileOutputType = ".dmg";
+                    return "Firefox%20" + builds + fileOutputType;
+                } else if (fileType.contains("pkg")) {
+                    fileOutputType = ".pkg";
+                    return "Firefox%20" + builds + fileOutputType;
+                } else {
                     fileOutputType = ".zip";
                     return "firefox-" + builds + ".zip";
+                }
+            }
             }
         }
 

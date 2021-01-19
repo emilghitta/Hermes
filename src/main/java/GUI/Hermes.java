@@ -1,6 +1,11 @@
 package GUI;
 
 import AppEngine.Engine;
+import org.jsoup.HttpStatusException;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -226,14 +231,14 @@ public class Hermes extends JFrame{
             }
         });
 
-        buildNumberDrop.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                super.focusGained(e);
-                Engine en = new Engine();
 
+        buildVersion.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                super.focusLost(e);
+                System.out.println("entered");
                 try {
-                    en.parseHtmlBuildVersion(buildPathForBuildVersion(Objects.requireNonNull(buildDropdown.getSelectedItem()).toString()));
+                    parseHtmlBuildVersion(buildPathForBuildVersion(Objects.requireNonNull(buildDropdown.getSelectedItem()).toString()));
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
@@ -260,6 +265,34 @@ public class Hermes extends JFrame{
                 frame.setVisible(true);
             }
         });
+
+    }
+
+    public void parseHtmlBuildVersion(String build) throws IOException {
+        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        try{
+            buildNumberDrop.removeAllItems();
+
+            /*
+            If a timeout occurs, an SocketTimeoutException will be thrown. The default timeout is 30 seconds.
+            The timeout specifies the combined maximum duration of the connection time and the time to read the full response.
+
+             */
+            Document buildNumber = Jsoup.connect(build).timeout(4000).get();
+            Elements con = buildNumber.select("a");
+
+            String builds = con.text();
+            String item[] = builds.replace("..", "").split("/");
+
+            for(int i = 0; i < item.length; i++){
+                buildNumberDrop.addItem(item[i]);
+            }
+        }catch (HttpStatusException e){
+            System.out.println("Resource not found");
+
+        }
+        setCursor(Cursor.getDefaultCursor());
+
 
     }
 }

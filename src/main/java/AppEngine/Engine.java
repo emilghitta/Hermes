@@ -217,21 +217,6 @@ public class Engine {
 
     }
 
-    public String parseHtmlBuildVersion(String build) throws IOException {
-        Document buildNumber = Jsoup.connect(build).get();
-        Elements con = buildNumber.select("a");
-
-        String builds = con.text();
-        String item[] = builds.replace("..", "").split("/ ");
-
-        System.out.println(item[1]);
-
-
-        System.out.println(builds);
-        return con.text();
-    }
-
-
 
     public String osCheck(){
         String OS = System.getProperty("os.name");

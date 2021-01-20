@@ -5,6 +5,9 @@ import net.lingala.zip4j.exception.ZipException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.rauschig.jarchivelib.Archiver;
+import org.rauschig.jarchivelib.ArchiverFactory;
+
 import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -68,16 +71,29 @@ public class Engine {
      */
     public void unzip(String fileName, String directory, String fileOutputType) throws IOException {
 
-        String source = directory + "\\" + fileName + fileOutputType;
+        String source = directory + osCheck() + fileName + fileOutputType;
         String destination = directory;
+        String os = System.getProperty("os.name");
 
-        try{
-            ZipFile zipFile = new ZipFile(source);
-            zipFile.extractAll(destination);
+        if(!os.contains("Windows")){
+            File archive = new File(source);
+            File dest = new File(destination);
 
-        }catch (ZipException e){
-            e.printStackTrace();
+            //Using the Archiver class to handle the tar files extraction
+            Archiver archiver = ArchiverFactory.createArchiver("tar", "bz2");
+            archiver.extract(archive, dest);
+
+        }else{
+            try{
+                ZipFile zipFile = new ZipFile(source);
+                zipFile.extractAll(destination);
+
+            }catch (ZipException e){
+                e.printStackTrace();
+            }
         }
+
+
     }
 
     public void launchFirefox( String fileOutputType, String directory, String fileName) throws IOException {
@@ -115,37 +131,37 @@ public class Engine {
         String finalPath;
 
         if(builds.get("betaVersion") != null){
-           buildPath.put("betaPath", archivesLink + "candidates/" + builds.get("betaVersion") + "-candidates/" + buildNumber +  "/" + osSelection +"/" + locale + "/" + msiExeInstallerPathBuilder(builds.get("betaVersion"),fileType));
+           buildPath.put("betaPath", archivesLink + "candidates/" + builds.get("betaVersion") + "-candidates/" + buildNumber +  "/" + osSelection +"/" + locale + "/" + msiExeInstallerPathBuilder(builds.get("betaVersion"),fileType,osSelection));
             finalPath = buildPath.get("betaPath");
 
             initiateDownload(finalPath,fileOutput,fileOutputType,fileName,directory);
         }else if(builds.get("releaseVersion") != null){
-            buildPath.put("releasePath", archivesLink + "candidates/" + builds.get("releaseVersion") + "-candidates/" + buildNumber +  "/" + osSelection +"/" + locale + "/" + msiExeInstallerPathBuilder(builds.get("releaseVersion"),fileType));
+            buildPath.put("releasePath", archivesLink + "candidates/" + builds.get("releaseVersion") + "-candidates/" + buildNumber +  "/" + osSelection +"/" + locale + "/" + msiExeInstallerPathBuilder(builds.get("releaseVersion"),fileType,osSelection));
             finalPath = buildPath.get("releasePath");
 
             initiateDownload(finalPath,fileOutput,fileOutputType,fileName,directory);
         }else if(builds.get("esrVersion") != null){
-            buildPath.put("esrPath", archivesLink + "candidates/" + builds.get("esrVersion") + "-candidates/" + buildNumber +  "/" + osSelection +"/" + locale + "/" + msiExeInstallerPathBuilder(builds.get("esrVersion"),fileType));
+            buildPath.put("esrPath", archivesLink + "candidates/" + builds.get("esrVersion") + "-candidates/" + buildNumber +  "/" + osSelection +"/" + locale + "/" + msiExeInstallerPathBuilder(builds.get("esrVersion"),fileType,osSelection));
             finalPath = buildPath.get("esrPath");
 
             initiateDownload(finalPath,fileOutput,fileOutputType,fileName,directory);
         }else if(builds.get("devedVersion") != null){
-            buildPath.put("devedPath", archivesLinkDevEd + "candidates/" + builds.get("devedVersion") + "-candidates/" + buildNumber +  "/" + osSelection +"/" + locale + "/" + msiExeInstallerPathBuilder(builds.get("devedVersion"),fileType));
+            buildPath.put("devedPath", archivesLinkDevEd + "candidates/" + builds.get("devedVersion") + "-candidates/" + buildNumber +  "/" + osSelection +"/" + locale + "/" + msiExeInstallerPathBuilder(builds.get("devedVersion"),fileType,osSelection));
             finalPath = buildPath.get("devedPath");
 
             initiateDownload(finalPath,fileOutput,fileOutputType,fileName,directory);
         }else{
             if(locale.contains("en-US")){
-                buildPath.put("latestNightlyPath", latestNightlyPath +"firefox-" + parseHtml(latestNightlyPath) + "." + locale + "." + osSelection +  msiExeInstallerPathBuilder(builds.get("latestNightly"),fileType));
+                buildPath.put("latestNightlyPath", latestNightlyPath +"firefox-" + parseHtml(latestNightlyPath) + "." + locale + "." + osSelection +  msiExeInstallerPathBuilder(builds.get("latestNightly"),fileType,osSelection));
             }else{
-                buildPath.put("latestNightlyPath",latestNightlyLocalePath + "firefox-" + parseHtml(latestNightlyPath) + "." + locale + "." + osSelection + msiExeInstallerPathBuilder(builds.get("latestNightly"),fileType));
+                buildPath.put("latestNightlyPath",latestNightlyLocalePath + "firefox-" + parseHtml(latestNightlyPath) + "." + locale + "." + osSelection + msiExeInstallerPathBuilder(builds.get("latestNightly"),fileType,osSelection));
             }
             finalPath = buildPath.get("latestNightlyPath");
             initiateDownload(finalPath,fileOutput,fileOutputType,fileName,directory);
         }
 
     }
-    private String msiExeInstallerPathBuilder(String builds,String fileType){
+    private String msiExeInstallerPathBuilder(String builds,String fileType, String osSelection){
         if(fileType.contains("Firefox Setup exe")){
             if(builds.contains("Nightly")){
                 return fileOutputType = ".installer.exe";
@@ -175,6 +191,8 @@ public class Engine {
                     return fileOutputType = ".dmg";
                 }else if(fileType.contains("pkg")) {
                     return fileOutputType = ".pkg";
+                }else if(osSelection.contains("linux-x86_64") || osSelection.contains("linux-i686")){
+                    return fileOutputType = ".tar.bz2";
                 }else{
                     return fileOutputType = ".zip";
                 }
@@ -186,8 +204,13 @@ public class Engine {
                     fileOutputType = ".pkg";
                     return "Firefox%20" + builds + fileOutputType;
                 } else {
-                    fileOutputType = ".zip";
-                    return "firefox-" + builds + ".zip";
+                    if(osSelection.contains("linux-x86_64") || osSelection.contains("linux-i686")){
+                        fileOutputType = ".tar.bz2";
+                        return "firefox-" + builds + ".tar.bz2";
+                    }else{
+                        fileOutputType = ".zip";
+                        return "firefox-" + builds + ".zip";
+                    }
                 }
             }
             }
@@ -203,9 +226,11 @@ public class Engine {
 
     public String osCheck(){
         String OS = System.getProperty("os.name");
-        if(OS.contains("Mac OS X")){
+        if(OS.contains("Mac OS X") || OS.contains("Linux")){
             return "/";
+        }else{
+            return "\\";
         }
-        return "\\";
+
     }
 }

@@ -169,7 +169,7 @@ public class Hermes extends JFrame{
 
                 if(osVersion.getSelectedItem() == "linux-i686" || osVersion.getSelectedItem() == "linux-x86_64"){
                     fileType.removeAllItems();
-                    fileType.addItem("tar.bz2");
+                    fileType.addItem("archive");
                 }else if(osVersion.getSelectedItem() == "mac"){
                     fileType.removeAllItems();
                     fileType.addItem("dmg");

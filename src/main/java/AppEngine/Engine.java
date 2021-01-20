@@ -4,10 +4,7 @@ import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
-import javax.swing.text.html.parser.Parser;
 import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -16,10 +13,8 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+
 
 public class Engine {
     public  String targetURL;
@@ -116,32 +111,27 @@ public class Engine {
         Create the final resource path based on received arguments.
      */
 
-    public void pathFoundation(HashMap<String,String> builds, String osSelection,String locale, String fileType, String fileName, String directory) throws IOException {
+    public void pathFoundation(HashMap<String,String> builds,String buildNumber, String osSelection,String locale, String fileType, String fileName, String directory) throws IOException {
         String finalPath;
 
         if(builds.get("betaVersion") != null){
-           buildPath.put("betaPath", archivesLink + "candidates/" + builds.get("betaVersion") + "-candidates/build1/" + osSelection +"/" + locale + "/" + msiExeInstallerPathBuilder(builds.get("betaVersion"),fileType));
+           buildPath.put("betaPath", archivesLink + "candidates/" + builds.get("betaVersion") + "-candidates/" + buildNumber +  "/" + osSelection +"/" + locale + "/" + msiExeInstallerPathBuilder(builds.get("betaVersion"),fileType));
             finalPath = buildPath.get("betaPath");
-            //Build 1 ? 2 ?
 
             initiateDownload(finalPath,fileOutput,fileOutputType,fileName,directory);
         }else if(builds.get("releaseVersion") != null){
-            buildPath.put("releasePath", archivesLink + "candidates/" + builds.get("releaseVersion") + "-candidates/build1/" + osSelection +"/" + locale + "/" + msiExeInstallerPathBuilder(builds.get("releaseVersion"),fileType));
+            buildPath.put("releasePath", archivesLink + "candidates/" + builds.get("releaseVersion") + "-candidates/" + buildNumber +  "/" + osSelection +"/" + locale + "/" + msiExeInstallerPathBuilder(builds.get("releaseVersion"),fileType));
             finalPath = buildPath.get("releasePath");
-            //Build 1 ? 2 ?
-
 
             initiateDownload(finalPath,fileOutput,fileOutputType,fileName,directory);
         }else if(builds.get("esrVersion") != null){
-            buildPath.put("esrPath", archivesLink + "candidates/" + builds.get("esrVersion") + "-candidates/build1/" + osSelection +"/" + locale + "/" + msiExeInstallerPathBuilder(builds.get("esrVersion"),fileType));
+            buildPath.put("esrPath", archivesLink + "candidates/" + builds.get("esrVersion") + "-candidates/" + buildNumber +  "/" + osSelection +"/" + locale + "/" + msiExeInstallerPathBuilder(builds.get("esrVersion"),fileType));
             finalPath = buildPath.get("esrPath");
-
 
             initiateDownload(finalPath,fileOutput,fileOutputType,fileName,directory);
         }else if(builds.get("devedVersion") != null){
-            buildPath.put("devedPath", archivesLinkDevEd + "candidates/" + builds.get("devedVersion") + "-candidates/build1/" + osSelection +"/" + locale + "/" + msiExeInstallerPathBuilder(builds.get("devedVersion"),fileType));
+            buildPath.put("devedPath", archivesLinkDevEd + "candidates/" + builds.get("devedVersion") + "-candidates/" + buildNumber +  "/" + osSelection +"/" + locale + "/" + msiExeInstallerPathBuilder(builds.get("devedVersion"),fileType));
             finalPath = buildPath.get("devedPath");
-            //Build 1 ? 2 ?
 
             initiateDownload(finalPath,fileOutput,fileOutputType,fileName,directory);
         }else{
@@ -152,13 +142,9 @@ public class Engine {
             }
             finalPath = buildPath.get("latestNightlyPath");
             initiateDownload(finalPath,fileOutput,fileOutputType,fileName,directory);
-
-
         }
 
     }
-
-    //Need to rethink this, make it much simple based on received params and evaluate them accordingly
     private String msiExeInstallerPathBuilder(String builds,String fileType){
         if(fileType.contains("Firefox Setup exe")){
             if(builds.contains("Nightly")){
@@ -183,7 +169,6 @@ public class Engine {
                 fileOutputType = ".exe";
                 return "Firefox%20Installer.exe";
             }
-
         }else{
             if(builds.contains("Nightly")) {
                 if(fileType.contains("dmg")) {
@@ -214,9 +199,7 @@ public class Engine {
 
         String nightlyCurrentVersion = content.text().replaceFirst("firefox-","");
         return nightlyCurrentVersion = nightlyCurrentVersion.replaceFirst(".en-US.win64.zip","");
-
     }
-
 
     public String osCheck(){
         String OS = System.getProperty("os.name");

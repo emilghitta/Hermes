@@ -31,6 +31,7 @@ public class Hermes extends JFrame{
     private JTextArea batchDownload;
     private JScrollPane scrollbar;
     private JComboBox buildNumberDrop;
+    private JLabel enterConfigLabel;
     private JCheckBox unarchiveBuild;
     private JCheckBox autoOpen;
     private String dropdownInput;
@@ -38,6 +39,7 @@ public class Hermes extends JFrame{
     private String osSelection;
     private JTextField filename = new JTextField(), dir = new JTextField();
     public String fileNN, dirNN;
+    public String buildNumber;
 
 
     protected HashMap<String,String> builds = new HashMap<>();
@@ -55,6 +57,8 @@ public class Hermes extends JFrame{
 
         specifyBuildLabel.setVisible(false);
         buildVersion.setVisible(false);
+        enterConfigLabel.setVisible(false);
+        batchDownload.setVisible(false);
 
         buildNumberDrop.addItem("build1");
         buildVersion.setText("eg. 82.0b4");
@@ -80,45 +84,56 @@ public class Hermes extends JFrame{
         downloadButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                errorMessage.setVisible(false);
-                   Engine eng = new Engine();
-                   dropdownInput = (String) buildDropdown.getSelectedItem();
-                   setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+//                if(!batchDownload.getText().isEmpty()){
+//                    batchDownload();
+//                }
 
+                errorMessage.setVisible(false);
+                Engine eng = new Engine();
+                dropdownInput = (String) buildDropdown.getSelectedItem();
+                setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
                    switch (dropdownInput){
                        case "Latest Nightly":
                            builds.put("latestNightly", "Nightly");
+                           fileNN = "LatestNightly" + "-" + buildLocale.getText();
                            break;
 
                        case "Beta":
                            builds.put("betaVersion", buildVersion.getText());
+                           fileNN = buildVersion.getText() + "-" + buildNumberDrop.getSelectedItem() + "-" + buildLocale.getText();
                            break;
 
                        case "Release" :
                            builds.put("releaseVersion", buildVersion.getText());
+                           fileNN = buildVersion.getText() + "-" + buildNumberDrop.getSelectedItem() + "-" + buildLocale.getText();
                            break;
 
                        case "ESR":
                            builds.put("esrVersion", buildVersion.getText());
+                           fileNN = buildVersion.getText() + "-" + buildNumberDrop.getSelectedItem() + "-" + buildLocale.getText();
                            break;
 
                        case "DevEd":
                            builds.put("devedVersion",buildVersion.getText());
+                           fileNN = buildVersion.getText() + "-" + buildNumberDrop.getSelectedItem() + "-" + buildLocale.getText();
                            break;
                    }
 
+                   downloadPathLabel.setText(dirNN + "\\" +fileNN);
                    osSelection = (String) osVersion.getSelectedItem();
                    typeOfFile = (String) fileType.getSelectedItem();
+                   buildNumber = (String) buildNumberDrop.getSelectedItem();
 
                    eng.checkboxes.put("unarchiveBuilds", unarchiveBuilds.isSelected());
                    eng.checkboxes.put("autoOpenBuilds",autoOpenBuilds.isSelected());
 
+                System.out.println(buildNumber);
                 System.out.println(fileNN);
                 System.out.println(dirNN);
 
                 try {
-                    eng.pathFoundation(builds,osSelection,buildLocale.getText(),typeOfFile,fileNN,dirNN);
+                    eng.pathFoundation(builds,buildNumber,osSelection,buildLocale.getText(),typeOfFile,fileNN,dirNN);
                     errorMessage.setText("SUCCESS!!");
                     errorMessage.setForeground(Color.green);
                     errorMessage.setVisible(true);
@@ -182,17 +197,22 @@ public class Hermes extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser c = new JFileChooser();
-                int rVal = c.showSaveDialog(Hermes.this);
-                if(rVal == JFileChooser.APPROVE_OPTION){
-                    filename.setText(c.getSelectedFile().getName().trim());
-                    dir.setText(c.getCurrentDirectory().toString());
-                    fileNN = filename.getText();
+                c.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+                int rval = c.showSaveDialog(Hermes.this);
+
+                if(rval == JFileChooser.APPROVE_OPTION){
+                    if(c.getSelectedFile() ==null){
+                        dir.setText(c.getCurrentDirectory().toString());
+                    }else if(c.getSelectedFile() != null){
+                        dir.setText(c.getSelectedFile().toString());
+                    }
+
                     dirNN = dir.getText();
-                    downloadPathLabel.setText(dirNN + "\\" +fileNN);
+                    downloadPathLabel.setText(dirNN);
                     downloadPathLabel.setVisible(true);
                     downloadButton.setEnabled(true);
                 }
-                if(rVal == JFileChooser.CANCEL_OPTION){
+                if(rval == JFileChooser.CANCEL_OPTION){
                     filename.setText("");
                     dir.setText("");
                 }
@@ -244,6 +264,14 @@ public class Hermes extends JFrame{
                 }
             }
         });
+        downloadMultipleBuildsViaButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                enterConfigLabel.setVisible(true);
+                batchDownload.setVisible(true);
+
+            }
+        });
     }
 
     private String buildPathForBuildVersion(String build){
@@ -285,7 +313,8 @@ public class Hermes extends JFrame{
             String item[] = builds.replace("..", "").split("/");
 
             for(int i = 0; i < item.length; i++){
-                buildNumberDrop.addItem(item[i]);
+                //We are trimming the added item so that no trailing or leading space is found. This is needed for our path builder.
+                buildNumberDrop.addItem(item[i].trim());
             }
         }catch (HttpStatusException e){
             System.out.println("Resource not found");
@@ -295,4 +324,9 @@ public class Hermes extends JFrame{
 
 
     }
+
+//    private void batchDownload(){
+//        String text = batchDownload.getText();
+//        System.out.println(text);
+//    }
 }

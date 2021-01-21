@@ -1,9 +1,15 @@
 package model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
+import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.rauschig.jarchivelib.Archiver;
 import org.rauschig.jarchivelib.ArchiverFactory;
@@ -18,6 +24,7 @@ public class Utils {
     protected String fileOutput;
     public String fileNN, dirNN;
     public HashMap<String, Boolean> checkBoxes = new HashMap<>();
+    public ObservableList<String> buildNumberList = FXCollections.observableArrayList();
 
     /*
     We are making use of different unzipping clases based on the os check.
@@ -143,6 +150,40 @@ public class Utils {
             String nightlyCurrentVersion = content.text().replaceFirst("firefox-","");
             return nightlyCurrentVersion = nightlyCurrentVersion.replaceFirst(".en-US.win64.zip","");
         }
+
+    public void parseHTMLBuildVersion(String build, ComboBox buildNumberDrop) throws IOException {
+        try{
+             /*
+            If a timeout occurs, an SocketTimeoutException will be thrown. The default timeout is 30 seconds.
+            The timeout specifies the combined maximum duration of the connection time and the time to read the full response.
+             */
+            buildNumberList.clear();
+
+
+            Document buildNumber = Jsoup.connect(build).timeout(4000).get();
+            Elements con = buildNumber.select("a");
+
+            String builds = con.text();
+            String item[] = builds.replace("..", "").split("/");
+
+            for(int i = 0; i < item.length; i++){
+                buildNumberList.add(item[i].trim());
+            }
+            buildNumberDrop.getItems().addAll(buildNumberList);
+        } catch (HttpStatusException e) {
+            System.out.println("Resource not found");
+        }
+    }
+
+    public String buildPathForBuildVersioN(String build, com.gluonhq.charm.glisten.control.TextField buildVersion){
+        if(!build.contains("DevEd") || !build.contains("Latest Nightly")){
+            return "https://archive.mozilla.org/pub/firefox/candidates/" + buildVersion.getText() + "-candidates/";
+        }else if(build.contains("DevEd")){
+            return "https://archive.mozilla.org/pub/devedition/candidates/" + buildVersion.getText() + "-candidates/";
+        }else{
+            return "";
+        }
+    }
 
     protected String osCheck(){
         String OS = System.getProperty("os.name");

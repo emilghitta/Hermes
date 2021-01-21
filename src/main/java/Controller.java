@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class Controller extends Hermes implements Initializable {
@@ -25,9 +26,6 @@ public class Controller extends Hermes implements Initializable {
     private String dropdownInput;
     protected HashMap<String,String> builds = new HashMap<>();
     private ObservableList<String> channelList = FXCollections.observableArrayList("Latest Nightly","Beta","Release","ESR","DevEd");
-
-    //Hardcoded for now
-    private ObservableList<String> buildNumberList = FXCollections.observableArrayList("build1");
     private ObservableList<String> osVersionList = FXCollections.observableArrayList("win64","win32","win64-aarch64","mac","linux-x86_64","linux-i686");
     private ObservableList<String> fileTypeWindows64List = FXCollections.observableArrayList("archive","Firefox Setup exe","Firefox Setup msi");
     private ObservableList<String> fileTypeWindows32List = FXCollections.observableArrayList("archive","Firefox Installer.exe","Firefox Setup exe","Firefox Setup msi");
@@ -127,7 +125,6 @@ public class Controller extends Hermes implements Initializable {
                 } else {
                     buildVersion.setDisable(false);
                     buildNumber.getItems().clear();
-                    buildNumber.getItems().addAll(buildNumberList);
                     buildNumber.setDisable(false);
                     osVersion.setDisable(true);
                 }
@@ -182,10 +179,15 @@ public class Controller extends Hermes implements Initializable {
             }
         });
 
-        buildNumber.setOnMouseEntered(new EventHandler<MouseEvent>() {
+        buildNumber.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-
+                buildNumber.getItems().clear();
+                try{
+                    utill.parseHTMLBuildVersion(utill.buildPathForBuildVersioN(Objects.requireNonNull(channelDropdown.getValue()),buildVersion),buildNumber);
+                }catch (IOException ioException){
+                    ioException.printStackTrace();
+                }
             }
         });
 

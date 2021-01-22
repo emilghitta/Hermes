@@ -250,6 +250,9 @@ public class Controller extends Hermes implements Initializable {
                 } else if (dropdownInput.contains("ESR")) {
                     if(eng.checkForInavlidString(buildVersion.getText(),"b")){
                         setErrorMessage("Build Download Error: Please double check you Build Version or Locale");
+
+                    }else if(!eng.checkForInavlidString(buildVersion.getText(),"esr")){
+                        setErrorMessage("Build Download Error: Please double check you Build Version or Locale");
                     }else{
                         System.out.println("ESR");
                         builds.put("esrVersion", buildVersion.getText());

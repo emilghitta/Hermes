@@ -1,0 +1,31 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Herm:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Herm_jar</output-path>
+    <root id="archive" name="Herm.jar">
+      <element id="module-output" name="Herm" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/net/lingala/zip4j/zip4j/2.6.4/zip4j-2.6.4.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-graphics/11/javafx-graphics-11.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/rauschig/jarchivelib/0.7.1/jarchivelib-0.7.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-graphics/11/javafx-graphics-11-linux.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-graphics/11/javafx-graphics-11-win.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="D:/charm-glisten-4.4.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="D:/cs/javafx-sdk-15.0.1/lib/src.zip" path-in-jar="/" />
+      <element id="extracted-dir" path="D:/cs/javafx-sdk-15.0.1/lib/javafx-swt.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="D:/cs/javafx-sdk-15.0.1/lib/javafx.web.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="D:/cs/javafx-sdk-15.0.1/lib/javafx.base.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="D:/cs/javafx-sdk-15.0.1/lib/javafx.fxml.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="D:/cs/javafx-sdk-15.0.1/lib/javafx.media.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="D:/cs/javafx-sdk-15.0.1/lib/javafx.swing.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="D:/cs/javafx-sdk-15.0.1/lib/javafx.controls.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="D:/cs/javafx-sdk-15.0.1/lib/javafx.graphics.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/commons/commons-compress/1.9/commons-compress-1.9.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/jsoup/jsoup/1.13.1/jsoup-1.13.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-graphics/11/javafx-graphics-11-mac.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-base/11/javafx-base-11-win.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-controls/11/javafx-controls-11.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/miglayout/miglayout/3.7.4/miglayout-3.7.4.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-controls/11/javafx-controls-11-win.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-base/11/javafx-base-11.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

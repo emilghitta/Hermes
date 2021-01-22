@@ -25,6 +25,7 @@ public class Utils {
     public String fileNN, dirNN;
     public HashMap<String, Boolean> checkBoxes = new HashMap<>();
     public ObservableList<String> buildNumberList = FXCollections.observableArrayList();
+    String OS = System.getProperty("os.name");
 
     /*
     We are making use of different unzipping clases based on the os check.
@@ -39,7 +40,7 @@ public class Utils {
             File archive = new File(source);
             File dest = new File(directory);
 
-            Archiver archiver = ArchiverFactory.createArchiver("tar","bz2");
+            Archiver archiver = ArchiverFactory.createArchiver("tar","bzip2");
             archiver.extract(archive,dest);
         }else{
             try{
@@ -63,7 +64,11 @@ public class Utils {
     protected void launchFirefox(String fileOutputType, String directory, String fileName) throws IOException {
         String fxPath = "";
         if(checkBoxes.get("unarchiveBuilds")) {
-            fxPath = directory + "\\firefox\\firefox" + fileOutputType;
+            if(!OS.contains("Linux")){
+                fxPath = directory + "\\firefox\\firefox" + fileOutputType;
+            }else{
+                fxPath = directory + "/firefox/firefox-bin";
+            }
         } else if (!checkBoxes.get("unarchiveBuilds")) {
             fxPath = directory + osCheck() + fileName + fileOutputType;
             System.out.println(fxPath);
@@ -73,19 +78,24 @@ public class Utils {
         if (fileOutputType.contains(".msi")) {
             Runtime run = Runtime.getRuntime();
             Process proc = run.exec("msiexec /i " + fxPath);
-        } else {
-            try {
-                //Need to rethink this if we hit Linux compat issues (because this is from the AWT library)
-                Desktop desktop = null;
-                if (Desktop.isDesktopSupported()) {
-                    desktop = Desktop.getDesktop();
+        } else if(OS.contains("Linux")) {
+            //We are running exec on Linux platforms to open the files
+            Runtime run = Runtime.getRuntime();
+            Process proc = run.exec(" " + fxPath);
+        }
+        else{
+                try {
+                    //This does not work in Linux (because this is from the AWT library)
+                    Desktop desktop = null;
+                    if (Desktop.isDesktopSupported()) {
+                        desktop = Desktop.getDesktop();
+                    }
+                    desktop.open(new File(fxPath));
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                desktop.open(new File(fxPath));
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         }
-    }
 
     //Maybe rethink this
         protected String installerPathBuilder(String builds,String fileType, String osSelection){
@@ -186,7 +196,6 @@ public class Utils {
     }
 
     protected String osCheck(){
-        String OS = System.getProperty("os.name");
         if(OS.contains("Mac OS X") || OS.contains("Linux")){
             return "/";
         }else{

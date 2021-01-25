@@ -16,11 +16,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="Herm" />
+        <module name="Hermes" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="Herm" target="7" />
+      <module name="Hermes" target="7" />
     </bytecodeTargetLevel>
   </component>
 </project>

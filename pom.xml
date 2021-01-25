@@ -27,9 +27,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <descriptor>assembly.xml</descriptor>
-                </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -90,9 +87,9 @@
         <dependency>
             <groupId>org.rauschig</groupId>
             <artifactId>jarchivelib</artifactId>
-            <version>0.7.1</version>
+            <version>1.1.0</version>
         </dependency>
-
     </dependencies>
+
     
 </project>

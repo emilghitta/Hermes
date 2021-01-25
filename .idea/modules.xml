@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/Herm.iml" filepath="$PROJECT_DIR$/.idea/Herm.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Hermes.iml" filepath="$PROJECT_DIR$/Hermes.iml" />
     </modules>
   </component>
 </project>

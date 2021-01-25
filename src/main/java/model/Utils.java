@@ -3,13 +3,11 @@ package model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.rauschig.jarchivelib.Archiver;
 import org.rauschig.jarchivelib.ArchiverFactory;
@@ -25,6 +23,7 @@ public class Utils {
     public String fileNN, dirNN;
     public HashMap<String, Boolean> checkBoxes = new HashMap<>();
     public ObservableList<String> buildNumberList = FXCollections.observableArrayList();
+    String OS = System.getProperty("os.name");
 
     /*
     We are making use of different unzipping clases based on the os check.
@@ -39,7 +38,7 @@ public class Utils {
             File archive = new File(source);
             File dest = new File(directory);
 
-            Archiver archiver = ArchiverFactory.createArchiver("tar","bz2");
+            Archiver archiver = ArchiverFactory.createArchiver("tar","bzip2");
             archiver.extract(archive,dest);
         }else{
             try{
@@ -63,29 +62,35 @@ public class Utils {
     protected void launchFirefox(String fileOutputType, String directory, String fileName) throws IOException {
         String fxPath = "";
         if(checkBoxes.get("unarchiveBuilds")) {
-            fxPath = directory + "\\firefox\\firefox" + fileOutputType;
+            if(!OS.contains("Linux")){
+                fxPath = directory + "\\firefox\\firefox" + fileOutputType;
+            }else{
+                //This doesn't work on Ubuntu 18
+                fxPath = directory + "/firefox/firefox-bin";
+            }
         } else if (!checkBoxes.get("unarchiveBuilds")) {
             fxPath = directory + osCheck() + fileName + fileOutputType;
             System.out.println(fxPath);
         }
 
-        //Need to test this in windows before removing! But since we are using desktop we could remove run.exec from msi
-        if (fileOutputType.contains(".msi")) {
-            Runtime run = Runtime.getRuntime();
-            Process proc = run.exec("msiexec /i " + fxPath);
-        } else {
-            try {
-                //Need to rethink this if we hit Linux compat issues (because this is from the AWT library)
-                Desktop desktop = null;
-                if (Desktop.isDesktopSupported()) {
-                    desktop = Desktop.getDesktop();
+         if(OS.contains("Linux")) {
+            //This helps us fixing the issue where the directory contained an extra space.
+            File file = new File(fxPath);
+            Process p = new ProcessBuilder(fxPath).start();
+        }
+        else{
+                try {
+                    //This does not work in Linux (because this is from the AWT library)
+                    Desktop desktop = null;
+                    if (Desktop.isDesktopSupported()) {
+                        desktop = Desktop.getDesktop();
+                    }
+                    desktop.open(new File(fxPath));
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                desktop.open(new File(fxPath));
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         }
-    }
 
     //Maybe rethink this
         protected String installerPathBuilder(String builds,String fileType, String osSelection){
@@ -186,7 +191,6 @@ public class Utils {
     }
 
     protected String osCheck(){
-        String OS = System.getProperty("os.name");
         if(OS.contains("Mac OS X") || OS.contains("Linux")){
             return "/";
         }else{

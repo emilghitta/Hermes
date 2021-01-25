@@ -32,6 +32,7 @@ public class Controller extends Hermes implements Initializable {
     private ObservableList<String> fileTypeWindowsArmList = FXCollections.observableArrayList("archive","Firefox Setup exe");
     private ObservableList<String> fileTypeLinuxList = FXCollections.observableArrayList("archive");
     private ObservableList<String> fileTypeMacList = FXCollections.observableArrayList("dmg","pkg");
+    private ObservableList<String> fileTypeMacListDevEd = FXCollections.observableArrayList("dmg");
 
     @FXML
     private Button saveToButton;
@@ -148,7 +149,11 @@ public class Controller extends Hermes implements Initializable {
                 if (osVersion.getValue().contains("linux-x86_64") || osVersion.getValue().contains("linux-i686")) {
                     installerType.getItems().addAll(fileTypeLinuxList);
                 } else if (osVersion.getValue().contains("mac")) {
-                    installerType.getItems().addAll(fileTypeMacList);
+                    if(channelDropdown.getValue().contains("DevEd")){
+                        installerType.getItems().addAll(fileTypeMacListDevEd);
+                    }else{
+                        installerType.getItems().addAll(fileTypeMacList);
+                    }
                 } else if (osVersion.getValue().contains("win64")) {
                     installerType.getItems().addAll(fileTypeWindows64List);
                 } else if (osVersion.getValue().contains("win64-aarch64")) {
@@ -244,6 +249,9 @@ public class Controller extends Hermes implements Initializable {
 
                 } else if (dropdownInput.contains("ESR")) {
                     if(eng.checkForInavlidString(buildVersion.getText(),"b")){
+                        setErrorMessage("Build Download Error: Please double check you Build Version or Locale");
+
+                    }else if(!eng.checkForInavlidString(buildVersion.getText(),"esr")){
                         setErrorMessage("Build Download Error: Please double check you Build Version or Locale");
                     }else{
                         System.out.println("ESR");

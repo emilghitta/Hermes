@@ -3,13 +3,11 @@ package model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.rauschig.jarchivelib.Archiver;
 import org.rauschig.jarchivelib.ArchiverFactory;
@@ -67,6 +65,7 @@ public class Utils {
             if(!OS.contains("Linux")){
                 fxPath = directory + "\\firefox\\firefox" + fileOutputType;
             }else{
+                //This doesn't work on Ubuntu 18
                 fxPath = directory + "/firefox/firefox-bin";
             }
         } else if (!checkBoxes.get("unarchiveBuilds")) {
@@ -74,14 +73,10 @@ public class Utils {
             System.out.println(fxPath);
         }
 
-        //Need to test this in windows before removing! But since we are using desktop we could remove run.exec from msi
-        if (fileOutputType.contains(".msi")) {
-            Runtime run = Runtime.getRuntime();
-            Process proc = run.exec("msiexec /i " + fxPath);
-        } else if(OS.contains("Linux")) {
-            //We are running exec on Linux platforms to open the files
-            Runtime run = Runtime.getRuntime();
-            Process proc = run.exec(" " + fxPath);
+         if(OS.contains("Linux")) {
+            //This helps us fixing the issue where the directory contained an extra space.
+            File file = new File(fxPath);
+            Process p = new ProcessBuilder(fxPath).start();
         }
         else{
                 try {

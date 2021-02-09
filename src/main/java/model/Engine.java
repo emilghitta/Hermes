@@ -14,6 +14,7 @@ public class Engine extends Utils {
     public String buildNumber;
 
 
+
     private final HashMap<String, String> buildPath = new HashMap<String, String>();
 
 
@@ -88,10 +89,10 @@ public class Engine extends Utils {
         }else{
             String latestNightlyPath = "https://archive.mozilla.org/pub/firefox/nightly/latest-mozilla-central/";
             if(locale.contains("en-US")){
-                buildPath.put("latestNightlyPath", latestNightlyPath +"firefox-" + parseHtml(latestNightlyPath) + "." + locale + "." + osSelection +  installerPathBuilder(builds.get("latestNightly"),fileType,osSelection));
+                buildPath.put("latestNightlyPath", latestNightlyPath +"firefox-" + parseHtml() + "." + locale + "." + osSelection +  installerPathBuilder(builds.get("latestNightly"),fileType,osSelection));
             }else{
                 String latestNightlyLocalePath = "https://archive.mozilla.org/pub/firefox/nightly/latest-mozilla-central-l10n/";
-                buildPath.put("latestNightlyPath", latestNightlyLocalePath + "firefox-" + parseHtml(latestNightlyPath) + "." + locale + "." + osSelection + installerPathBuilder(builds.get("latestNightly"),fileType,osSelection));
+                buildPath.put("latestNightlyPath", latestNightlyLocalePath + "firefox-" + parseHtml() + "." + locale + "." + osSelection + installerPathBuilder(builds.get("latestNightly"),fileType,osSelection));
             }
             finalPath = buildPath.get("latestNightlyPath");
 

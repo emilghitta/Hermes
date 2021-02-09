@@ -23,6 +23,7 @@ public class Utils {
     public String fileNN, dirNN;
     public HashMap<String, Boolean> checkBoxes = new HashMap<>();
     public ObservableList<String> buildNumberList = FXCollections.observableArrayList();
+    private String nightlyReleaseNotes ="https://www.mozilla.org/en-US/firefox/nightly/notes/";
     String OS = System.getProperty("os.name");
 
     /*
@@ -148,12 +149,12 @@ public class Utils {
             }
         }
 
-    protected String parseHtml(String build) throws IOException {
-            Document doc = Jsoup.connect(build).get();
-            Elements content = doc.select("td").eq(617);
+    protected String parseHtml() throws IOException {
+            Document doc = Jsoup.connect(nightlyReleaseNotes).get();
+            String content = doc.location();
 
-            String nightlyCurrentVersion = content.text().replaceFirst("firefox-","");
-            return nightlyCurrentVersion = nightlyCurrentVersion.replaceFirst(".en-US.win64.zip","");
+            String nightlyCurrentVersion = content.replaceFirst("https://www.mozilla.org/en-US/firefox/","");
+            return nightlyCurrentVersion = nightlyCurrentVersion.replaceFirst("/releasenotes/","");
         }
 
     public void parseHTMLBuildVersion(String build, ComboBox buildNumberDrop) throws IOException {

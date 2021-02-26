@@ -3,29 +3,43 @@
     <output-path>$PROJECT_DIR$/out/artifacts/Hermes_jar</output-path>
     <root id="archive" name="Hermes.jar">
       <element id="module-output" name="Hermes" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/net/lingala/zip4j/zip4j/2.6.4/zip4j-2.6.4.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-graphics/11/javafx-graphics-11.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/rauschig/jarchivelib/0.7.1/jarchivelib-0.7.1.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-graphics/11/javafx-graphics-11-linux.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-graphics/11/javafx-graphics-11-win.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="D:/charm-glisten-4.4.1.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="D:/cs/javafx-sdk-15.0.1/lib/src.zip" path-in-jar="/" />
-      <element id="extracted-dir" path="D:/cs/javafx-sdk-15.0.1/lib/javafx-swt.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="D:/cs/javafx-sdk-15.0.1/lib/javafx.web.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="D:/cs/javafx-sdk-15.0.1/lib/javafx.base.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="D:/cs/javafx-sdk-15.0.1/lib/javafx.fxml.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="D:/cs/javafx-sdk-15.0.1/lib/javafx.media.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="D:/cs/javafx-sdk-15.0.1/lib/javafx.swing.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="D:/cs/javafx-sdk-15.0.1/lib/javafx.controls.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="D:/cs/javafx-sdk-15.0.1/lib/javafx.graphics.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/commons/commons-compress/1.9/commons-compress-1.9.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/jsoup/jsoup/1.13.1/jsoup-1.13.1.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-graphics/11/javafx-graphics-11-mac.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-base/11/javafx-base-11-win.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/maven/maven-model/3.2.3/maven-model-3.2.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/bitbucket/joxley/getdown-maven-plugin/1.0.0/getdown-maven-plugin-1.0.0.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-controls/11/javafx-controls-11.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/jsoup/jsoup/1.13.1/jsoup-1.13.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/codehaus/plexus/plexus-utils/3.0.17/plexus-utils-3.0.17.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/net/lingala/zip4j/zip4j/2.6.4/zip4j-2.6.4.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/rauschig/jarchivelib/1.1.0/jarchivelib-1.1.0.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/miglayout/miglayout/3.7.4/miglayout-3.7.4.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-controls/11/javafx-controls-11-win.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/javax/annotation/jsr250-api/1.0/jsr250-api-1.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/eclipse/sisu/org.eclipse.sisu.plexus/0.0.0.M5/org.eclipse.sisu.plexus-0.0.0.M5.jar" path-in-jar="/" />
+      <element id="library" level="project" name="charm-glisten-6.0.6" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/codehaus/plexus/plexus-component-annotations/1.5.5/plexus-component-annotations-1.5.5.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/maven/maven-plugin-api/3.2.3/maven-plugin-api-3.2.3.jar" path-in-jar="/" />
+      <element id="library" level="project" name="lib2" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-graphics/11/javafx-graphics-11.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/javax/enterprise/cdi-api/1.0/cdi-api-1.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="D:/Work Related/prot/charm-glisten-6.0.6.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/threerings/getdown/1.3.1/getdown-1.3.1.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-base/11/javafx-base-11.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-graphics/11/javafx-graphics-11-mac.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-graphics/11/javafx-graphics-11-win.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/aopalliance/aopalliance/1.0/aopalliance-1.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/google/code/findbugs/jsr305/1.3.9/jsr305-1.3.9.jar" path-in-jar="/" />
+      <element id="library" level="project" name="lib1" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/google/guava/guava/10.0.1/guava-10.0.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/codehaus/plexus/plexus-classworlds/2.4/plexus-classworlds-2.4.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/eclipse/sisu/org.eclipse.sisu.inject/0.0.0.M5/org.eclipse.sisu.inject-0.0.0.M5.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-fxml/11.0.1/javafx-fxml-11.0.1-win.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/javax/inject/javax.inject/1/javax.inject-1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/commons/commons-compress/1.20/commons-compress-1.20.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-controls/11/javafx-controls-11-win.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/sonatype/sisu/sisu-guice/3.1.0/sisu-guice-3.1.0-no_aop.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-fxml/11.0.1/javafx-fxml-11.0.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-base/11/javafx-base-11-win.jar" path-in-jar="/" />
+      <element id="library" level="project" name="charm-glisten-6.0" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/maven/maven-artifact/3.2.3/maven-artifact-3.2.3.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

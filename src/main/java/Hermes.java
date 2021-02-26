@@ -5,7 +5,6 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import model.UpdateInfo;
 import model.Updater;
 
 import java.io.IOException;
